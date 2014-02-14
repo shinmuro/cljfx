@@ -1,20 +1,31 @@
 # cljfx
-JavaFX 簡易ラッパーデモ。
-
-# 特徴
-一応一つだけデモが起動します。
-
-# インストール
-JavaFX は Java7 から jar で標準であるもののクラスパスは通っていない為まず Maven ローカルリポジトリに追加します。
-
-Maven ローカルリポジトリに追加する為に JavaFX のバージョンを確認する必要があります。
-バージョンは %JAVA_HOME%\lib\jre\jfxrt.properties の中に書かれています。
-
-その後、project.clj の :dependencies に追加します。
-[local.oracle/javafxrt "2.2.45"]
+JavaFX 簡易ラッパーデモ。一応一つだけデモが起動します。
 
 # サンプル実行
+* git クローン
+このリポジトリをクローンするなり zip ダウンロードするなりします。
+
+* JavaFX ランタイムを Maven ローカルリポジトリに追加
+JavaFX は Java7 から jar で標準であるもののクラスパスは通っていない為まず Maven ローカルリポジトリに追加します。
+
+Maven ローカルリポジトリに追加する為に JavaFX のバージョンを確認する必要があります。バージョンは %JAVA_HOME%\lib\jre\jfxrt.properties の中に書かれています。
+
+そのバージョンを元に、maven ローカルリポジトリに登録する為に以下を実行します。
+mvn install:install-file -DgroupId=local.oracle -DartifactId=javafxrt -Dversion=2.2.45 -Dpackaging=jar -Dfile=jfxrt.jar
+
+-Dversion= 以降にあるものがバージョン番号になります。先ほど確認した番号と変わらなければそのままコピペして実行
+するだけで構いません。バージョンが異なる場合はコマンドのバージョン指定の部分を適時変えて下さい。
+
+バージョンを変更して登録した場合は、クローンしたリポジトリフォルダの project.clj の :dependencies を併せて変更します。
+[local.oracle/javafxrt "2.2.45"]
+
+そして、プロジェクトフォルダへ移動し、以下を実行します。
+
 lein run -m cljfx.examples.draggable/draggable-panel
+
+名前から分かるかもしれませんが、公式 JavaFX チュートリアルのイベントフィルタリングのサンプルを移植してみました。
+作りは UI デザインを SceneBuiler で行い、イベントハンドリングその他 SceneBuilder では対応できなかった部分を
+Clojure で行っています。
 
 オリジナルの Java サンプル→ http://docs.oracle.com/javafx/2/events/DraggablePanelsExample.java.htm
 サンプルを解説した記事    → http://docs.oracle.com/javafx/2/events/filters.htm
