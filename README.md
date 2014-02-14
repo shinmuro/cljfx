@@ -1,14 +1,29 @@
 # cljfx
-邪道な JavaFX 簡易ラッパーデモ。
+JavaFX 簡易ラッパーデモ。
 
-# モチベーション
+# 特徴
+一応一つだけデモが起動します。
+
+# インストール
+JavaFX は Java7 から jar で標準であるもののクラスパスは通っていない為まず Maven ローカルリポジトリに追加します。
+
+Maven ローカルリポジトリに追加する為に JavaFX のバージョンを確認する必要があります。
+バージョンは %JAVA_HOME%\lib\jre\jfxrt.properties の中に書かれています。
+
+その後、project.clj の :dependencies に追加します。
+[local.oracle/javafxrt "2.2.45"]
+
+# サンプル実行
+lein run -m cljfx.examples.draggable/draggable-panel
+
+オリジナルの Java サンプル→ http://docs.oracle.com/javafx/2/events/DraggablePanelsExample.java.htm
+サンプルを解説した記事    → http://docs.oracle.com/javafx/2/events/filters.htm
+
+# 動機
 - REPL で動作確認したい
 - GUI デザイン骨組みは Scene Builder 任せにしたい
 - なるべく seesaw に近づけたい
 - TableView は早めに使えるようにしたい
-
-# 特徴
-一応一つだけデモが起動します。
 
 # 利点
 - REPL で動かせる
@@ -25,21 +40,6 @@
   - JavaFX の元々がそうなってるためどうしようもありません
 - コードからの動的生成はほぼ考えてない
 - FXML 及び Node の id 依存(fx:id 使えないし Clojure で @FXML を使うのは面倒なので)
-
-# インストール
-JavaFX は Java7 から jar で標準であるもののクラスパスは通っていない為まず Maven ローカルリポジトリに追加します。
-
-Maven ローカルリポジトリに追加する為に JavaFX のバージョンを確認する必要があります。
-バージョンは %JAVA_HOME%\lib\jre\jfxrt.properties の中に書かれています。
-
-その後、project.clj の :dependencies に追加します。
-[local.oracle/javafxrt "2.2.45"]
-
-# サンプル実行
-lein run -m cljfx.examples.draggable/draggable-panel
-
-オリジナルの Java サンプル→ http://docs.oracle.com/javafx/2/events/DraggablePanelsExample.java.htm
-サンプルを解説した記事    → http://docs.oracle.com/javafx/2/events/filters.htm
 
 # 目指してる事
 - 極力分かり易さを維持して少ないコードで書けるようにする
@@ -60,8 +60,7 @@ id で検索できるのに名前を何種類も持つ意味を感じない
 が、標準的なやりかたでない事は分かってるので JavaFX 自体に動きがあればその時に考える
 
 # 謝辞
-upshot 始め、以下の github プロジェクトのコードは参考にさせて頂いております。
-
+upshot 始め色々参考にさせてもらいました
 
 Copyright © 2014 shinmuro
 
