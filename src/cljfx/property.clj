@@ -8,9 +8,7 @@
   (:require [clojure.reflect :as r]
             [clojure.string :as s]))
 
-;; TODO: 動作が遅い場合は r/reflect 内部で呼ばれてる type-reflect をメモ化すると良いかも
-;;       r/reflect はソース見ると type-reflect へ必ず class を渡すように変換しているだけの関数なので。
-(defn- properties
+(defn- properties-fn
   "指定 JavaFX UI インスタンスのプロパティ情報を取得する。
    プロパティ名をキーとしたマップを返す。
 
@@ -36,6 +34,8 @@
              (map #(update-in % [:return-type] (fn [s] (Class/forName s)))))]
     (zipmap (map (comp keyword camel->dash :name) base-props) base-props)))
 
+(def ^:private properties (memoize properties-fn))
+
 ;; TODO: ここエラーハンドリングきっちりしときたいが
 (defn- clj-invoke
   [target meth & args]
@@ -60,10 +60,6 @@
   [target prop]
   (str "set" (-> (properties target) prop :name upper-case-1st)))
 
-;(defn v!
-;  "JavaFX UI インスタンスのプロパティ値を変更する。"
-;  [target prop & args]
-;  (apply clj-invoke target (setter-str target prop) args))
 (defn v!
   "JavaFX UI インスタンスのプロパティ値を変更する。"
   ([target prop value] (clj-invoke target (setter-str target prop) value))

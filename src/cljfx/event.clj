@@ -73,6 +73,22 @@
             (assoc m (trim-any (const->key (str c) "on-"))
                c)) {} event-typenames))
 
+(comment
+;; ここでヒエラルキー作って value/List/Map/Set か？
+(defmethod listener :type/change [handler f]
+  (listener* ChangeListener changed f ovservable-value old-val new-val))
+
+(defmethod listener :type.change/seq [handler f]
+  (listener* ChangeListener changed f ovservable-value old-val new-val))
+
+(defmethod listener :type/invalidated [handler f]
+  (listener* ChangeListener changed f ovservable-value old-val new-val))
+
+;; ここでヒエラルキー作って tableview とか listview かね？
+(defmethod listener :type.change/cell [handler f]
+  (listener* ChangeListener changed f ovservable-value old-val new-val))
+)
+
 (defmacro handler
   "イベントハンドラ生成マクロ。
    関数 f は第一引数に target node、第二引数に event を取る関数を渡す事。
@@ -83,18 +99,31 @@
 
 (defn- event-exists? [k] (not (nil? (event-map k))))
 
-(defn add-filter! [^Node target event-key f]
+(defn add-filter!
+  "指定ノード target のイベントタイプ event-key に関数 f を *イベントフィルタとして* 登録。
+
+   remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
+  [^Node target event-key f]
   {:pre [(event-exists? event-key)]}
   (.addEventFilter target (event-map event-key) (handler f)))
 
 (defn add-handler! [^Node target event-key f]
+  "指定ノード target のイベントタイプ event-key に関数 f を *イベントハンドラとして* 登録。
+
+   remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
   {:pre [(event-exists? event-key)]}
   (.addEventHandler target (event-map event-key) (handler f)))
 
 (defn remove-filter! [^Node target event-key f]
+  "指定ノード target のイベントタイプ event-key に登録された *イベントハンドラ関数* f を削除。
+
+   remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
   {:pre [(event-exists? event-key)]}
   (.removeEventFilter target (event-map event-key) (handler f)))
 
 (defn remove-handler! [^Node target event-key f]
+  "指定ノード target のイベントタイプ event-key に登録された *イベントハンドラ関数* f を削除。
+
+   remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
   {:pre [(event-exists? event-key)]}
   (.removeEventHandler target (event-map event-key) (handler f)))

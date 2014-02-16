@@ -1,9 +1,8 @@
 (ns
   cljfx.examples.draggable
-  (:use [cljfx core property event seek coerce])
+  (:use [cljfx core property event listener seek coerce])
 
-  (:import javafx.scene.input.MouseEvent
-           javafx.beans.binding.Bindings))
+  (:import javafx.beans.binding.Bindings))
 
 ;; lein run -m cljfx.examples.draggable/draggable-panel
 
@@ -15,8 +14,9 @@
   (.. cbox getSelectionModel (select 0)))
 
 (defn set-button-action! [b label]
-  (v! b :on-action (handler (fn [_ e]
-                              (v! label :text (.. e getSource getText))))))
+  (v! b :on-action (listener :event
+                          (fn [_ e]
+                            (v! label :text (.. e getSource getText))))))
 
 ; こちらは v! の修正必要
 ;(defn set-button-action! [b label]
@@ -40,15 +40,15 @@
                   (when (.get drag-mode)
                     (reset! anchor-x (.getX e))
                     (reset! anchor-y (.getY e))
-                    (reset! trans-x  (.getTranslateX node))
-                    (reset! trans-y  (.getTranslateY node)))))
+                    (reset! trans-x  (v node :translate-x))
+                    (reset! trans-y  (v node :translate-y)))))
 
     (add-filter! node
                  :on-mouse-dragged
                  (fn [_ e]
                    (when (.get drag-mode)
-                     (.setTranslateX node (+ @trans-x (.getX e) (- @anchor-x)))
-                     (.setTranslateY node (+ @trans-y (.getY e) (- @anchor-y))))))))
+                     (v! node :translate-x (+ @trans-x (.getX e) (- @anchor-x)))
+                     (v! node :translate-y (+ @trans-y (.getY e) (- @anchor-y))))))))
 
 (defn draggable-panel []
   (let [root  (load-fxml "draggable-panel.fxml")

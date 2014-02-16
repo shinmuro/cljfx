@@ -1,7 +1,7 @@
 # cljfx
 JavaFX 簡易ラッパーデモ。一応一つだけデモが起動します。
 
-## サンプル実行
+## デモ実行
 ### git クローン
 
 このリポジトリをクローンするなり zip ダウンロードするなりします。
@@ -25,21 +25,26 @@ mvn install:install-file -DgroupId=local.oracle -DartifactId=javafxrt -Dversion=
 [local.oracle/javafxrt "2.2.45"]
 ```
 
-### プロジェクト実行
-そして、プロジェクトフォルダへ移動し、以下を実行します。
+### デモ
+そして、プロジェクトフォルダへ移動し、どれかを実行します。
 
 ```
 lein run -m cljfx.examples.draggable/draggable-panel
 ```
+[オリジナルの Java サンプル](http://docs.oracle.com/javafx/2/events/DraggablePanelsExample.java.htm)
+
+
+```
+lein run -m cljfx.examples.draggable/change-listener
+```
+公式サンプルである ensemble の ChangeListenerSample.java がベース
 
 ### サンプルデモについて
-名前から分かるかもしれませんが、公式 JavaFX チュートリアルのイベントフィルタリングのサンプルを移植してみました。
-作りは UI デザインを SceneBuiler で行い、イベントハンドリングその他 SceneBuilder では対応できなかった部分を
-Clojure で行っています。オリジナルのリソースは以下リンク先にあります。
+構成は UI デザインを主に Scene Builder で行い、Scene Builder では無理(でもない？)なイベントハンドリングなどを
+Clojure で行ってます。
 
- [オリジナルの Java サンプル](http://docs.oracle.com/javafx/2/events/DraggablePanelsExample.java.htm)
-
- [サンプルを解説した記事](http://docs.oracle.com/javafx/2/events/filters.htm)
+### ライブラリとしての使用
+まだ API は自分の中でも全く固めていないのですが、それでも良ければ。固めた段階で 1.0.0 としたいなとはおぼろげに考えてます。
 
 ## 以下目標など
 ### 動機
