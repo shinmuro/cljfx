@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children><VBox alignment="CENTER" prefHeight="119.0" prefWidth="226.0" spacing="10.0">
+<children><Text id="txt" strokeType="OUTSIDE" strokeWidth="0.0" text="not hovered" wrappingWidth="142.888671875">
+<font>
+<Font size="22.0" />
+</font></Text><Button id="add" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" text="Add listener" /><Button id="remove" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" text="Remove listener" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children>
+<padding>
+<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+</padding></VBox><Rectangle id="rect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0">
+<HBox.margin>
+<Insets />
+</HBox.margin>
+<effect>
+<Lighting>
+<bumpInput>
+<Shadow />
+</bumpInput>
+</Lighting>
+</effect></Rectangle>
+</children></HBox>
