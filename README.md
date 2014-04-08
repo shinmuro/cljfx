@@ -37,10 +37,12 @@ mvn install:install-file -DgroupId=local.oracle -DartifactId=javafxrt -Dversion=
 ### デモ
 現状 4 つほどサンプルがあります。プロジェクトフォルダへ移動して下記 leiningen コマンドを実行すればサンプルアプリが動きます。
 
+```
 lein run -m cljfx.examples.draggable/draggable-panel
 lein run -m cljfx.examples.draggable/change-listener
 lein run -m cljfx.examples.dnd/hello-dnd
 lein run -m cljfx.examples.keyboard/keyboard-example
+```
 
 ### サンプルデモについて
 構成は UI デザインを主に Scene Builder で行い、Scene Builder では無理(でもない？)なイベントハンドリングなどを
