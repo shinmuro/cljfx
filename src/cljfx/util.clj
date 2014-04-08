@@ -1,5 +1,6 @@
-(ns cljfx.util
-   "内部ユーティリティ関数。"
+(ns ^{:doc "内部ユーティリティ関数。"
+      :no-doc true}
+   cljfx.util
 
   (:require [clojure.string :as s]))
 

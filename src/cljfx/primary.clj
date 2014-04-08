@@ -16,12 +16,12 @@
 (defn -isReady [] (and (realized? ready) @ready))
 
 (def ^:private stage
-  "プライマリステージ。start メソッド完了後インスタンス化される。"
+  "Primary Stage。start メソッド完了後インスタンス化される。"
   (promise))
 (defn -getPrimaryStage [] (and (realized? stage) @stage))
 
 (def ^:private scene
-  "プライマリシーン。start メソッド完了後インスタンス化される。"
+  "Primary Scene。start メソッド完了後インスタンス化される。"
   (promise))
 (defn -getPrimaryScene [] (and (realized? scene) @scene))
 

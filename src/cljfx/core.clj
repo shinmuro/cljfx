@@ -1,15 +1,40 @@
-(ns cljfx.core
+(ns  cljfx.core
   "簡易 JavaFX wrapper。FXML から読み込んでどうこうする事を前提としてるので動的生成は弱い。"
 
   (:import javafx.application.Application
            javafx.application.Platform
            javafx.fxml.FXMLLoader
 
+           javafx.scene.Node
+           javafx.scene.control.Skin
+
            cljfx.primary)
 
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]))
 
-  (:use [cljfx property event seek]))
+(load "core_property")
+(load "core_coerce")
+(load "core_event")
+(load "core_bind")
+
+(defn fseek
+  "f(irst)seek。
+
+   JavaFX CSS セレクタ書式に従ってマッチする Node を返す。
+   セレクタの結果複数となっても最初の Node のみ返す。"
+  [^Node node fmt]
+  (.lookup node fmt))
+
+(defn seek
+  "JavaFX CSS セレクタ書式に従ってマッチする Node のシーケンスを返す。
+
+   オブジェクト操作を目的としている為、シーケンスを返す際 javafx.scene.control.Skin なものは除外する。
+   (いいのかどうか分からんが)"
+  [node fmt]
+  (letfn [(skin? [obj]
+            (isa? (class obj) javafx.scene.control.Skin))]
+    (->> (.lookupAll node fmt)
+         (remove skin?))))
 
 (defn load-fxml
   [name]
@@ -33,10 +58,22 @@
   ;; 単に今のとは別スレッドで走らせたいだけなので future は何も受け取らない
   ;; 以降 StackTrace が取れなくなると言う問題は残るが
   (future (apply launch-await args))
-  (Thread/sleep 3000)
+  (Thread/sleep 2000)
   (loop [ready? (primary/isReady)]
     (if ready?
       (do
         (v! (primary/getPrimaryScene) :root root)
         (show (primary/getPrimaryStage)))
       (recur (primary/isReady)))))
+
+(defn- kbd*
+  [s]
+  (->> (s/upper-case s)
+       (str (symbol 'javafx.scene.input.KeyCode) "/")
+       symbol
+       eval))
+
+(def kbd
+  "指定したキーコードの javafx.scene.input.KeyCode オブジェクトを返す。
+   大文字小文字の区别はない。"
+  (memoize kbd*))

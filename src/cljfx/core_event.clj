@@ -1,19 +1,18 @@
-(ns cljfx.event
-  "JavaFX Event を扱う関数。"
+(in-ns 'cljfx.core)
 
-  (:import javafx.scene.Node
-           [javafx.event EventHandler EventType]
-           [javafx.event Event ActionEvent]
-           [javafx.scene.control
-            ListView$EditEvent
-            CheckBoxTreeItem$TreeModificationEvent
-            TableColumn$CellEditEvent
-            TreeItem$TreeModificationEvent
-            TreeView$EditEvent]
+(import javafx.scene.Node
+        '[javafx.event EventHandler EventType]
+        '[javafx.event Event ActionEvent]
+        '[javafx.scene.control
+          ListView$EditEvent
+          CheckBoxTreeItem$TreeModificationEvent
+          TableColumn$CellEditEvent
+          TreeItem$TreeModificationEvent
+          TreeView$EditEvent]
 
-         [javafx.scene.media MediaMarkerEvent MediaErrorEvent]
+        '[javafx.scene.media MediaMarkerEvent MediaErrorEvent]
 
-         [javafx.scene.input
+        '[javafx.scene.input
           InputEvent ContextMenuEvent DragEvent
           GestureEvent RotateEvent ScrollEvent
           SwipeEvent ZoomEvent InputMethodEvent
@@ -23,7 +22,37 @@
          javafx.stage.WindowEvent
          javafx.concurrent.WorkerStateEvent)
 
-  (:use cljfx.util))
+(use 'cljfx.util)
+
+(import javafx.event.EventHandler
+        javafx.beans.InvalidationListener
+        javafx.beans.value.ChangeListener)
+
+
+(defmacro ^:private listener*
+  [cls ifmethod f & args]
+  (when-let [arg-syms (map (comp gensym str) args)]
+    `(reify ~cls
+       (~ifmethod [this# ~@arg-syms] (apply ~f [this# ~@arg-syms])))))
+
+(defmulti listener "各種 listener 生成マルチメソッド"
+  (fn [listener-type f & receivers] (identity listener-type)))
+
+(defmethod listener :event [listener-type f]
+  (listener* EventHandler handle f event))
+
+(defmethod listener :invalidated [listener-type f]
+  (listener* InvalidationListener invalidated f ovservable))
+
+(defmacro listened
+  "EventHandler 簡易生成マクロ。
+
+   body を実行する EventHandler を生成し、body 実行後は Event.consume() も行う。"
+  [obj-and-event & body]
+  `(listener :event (fn ~obj-and-event
+                      (try ~@body
+                           (finally
+                             (.consume ~(obj-and-event 1)))))))
 
 ;; リストアップはほぼ力技
 #_(def ^:private event-classes
@@ -68,34 +97,12 @@
 ; Event/ANY
 ; KeyEvent/CHAR_UNDEFINED
 
+;            (assoc m (trim-any (const->key (str c) "on-"))
+
 (def ^:private event-map
   (reduce (fn [m c]
-            (assoc m (trim-any (const->key (str c) "on-"))
+            (assoc m (trim-any (const->key (str c)))
                c)) {} event-typenames))
-
-(comment
-;; ここでヒエラルキー作って value/List/Map/Set か？
-(defmethod listener :type/change [handler f]
-  (listener* ChangeListener changed f ovservable-value old-val new-val))
-
-(defmethod listener :type.change/seq [handler f]
-  (listener* ChangeListener changed f ovservable-value old-val new-val))
-
-(defmethod listener :type/invalidated [handler f]
-  (listener* ChangeListener changed f ovservable-value old-val new-val))
-
-;; ここでヒエラルキー作って tableview とか listview かね？
-(defmethod listener :type.change/cell [handler f]
-  (listener* ChangeListener changed f ovservable-value old-val new-val))
-)
-
-(defmacro handler
-  "イベントハンドラ生成マクロ。
-   関数 f は第一引数に target node、第二引数に event を取る関数を渡す事。
-
-   handler 内で特に wrap した関数は用意してないので使用時は Java Interop を使用する事。"
-  [f]
-  `(reify EventHandler (~'handle [this# event#] (apply ~f [this# event#]))))
 
 (defn- event-exists? [k] (not (nil? (event-map k))))
 
@@ -105,25 +112,28 @@
    remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
   [^Node target event-key f]
   {:pre [(event-exists? event-key)]}
-  (.addEventFilter target (event-map event-key) (handler f)))
+  (.addEventFilter target (event-map event-key) (listener :event f)))
 
-(defn add-handler! [^Node target event-key f]
+(defn add-handler!
   "指定ノード target のイベントタイプ event-key に関数 f を *イベントハンドラとして* 登録。
 
    remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
+  [^Node target event-key f]
   {:pre [(event-exists? event-key)]}
-  (.addEventHandler target (event-map event-key) (handler f)))
+  (.addEventHandler target (event-map event-key) (listener :event f)))
 
-(defn remove-filter! [^Node target event-key f]
+(defn remove-filter!
   "指定ノード target のイベントタイプ event-key に登録された *イベントハンドラ関数* f を削除。
 
    remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
+  [^Node target event-key f]
   {:pre [(event-exists? event-key)]}
-  (.removeEventFilter target (event-map event-key) (handler f)))
+  (.removeEventFilter target (event-map event-key) (listener :event f)))
 
-(defn remove-handler! [^Node target event-key f]
+(defn remove-handler!
   "指定ノード target のイベントタイプ event-key に登録された *イベントハンドラ関数* f を削除。
 
    remove-filter! する必要がある場合はあらかじめ f に名前を付けておくこと推奨。"
+  [^Node target event-key f]
   {:pre [(event-exists? event-key)]}
-  (.removeEventHandler target (event-map event-key) (handler f)))
+  (.removeEventHandler target (event-map event-key) (listener :event f)))

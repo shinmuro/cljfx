@@ -1,13 +1,11 @@
-(ns cljfx.property
-  "JavaFX Property を扱う関数。"
+(in-ns 'cljfx.core)
 
-  (:import javafx.beans.binding.BooleanExpression)
+(import javafx.beans.binding.BooleanExpression)
+(use 'cljfx.util)
+(require '[clojure.reflect :as r]
+         '[clojure.string :as s])
 
-  (:use cljfx.util)
-
-  (:require [clojure.reflect :as r]
-            [clojure.string :as s]))
-
+;  JavaFX Property を扱う関数。
 (defn- properties-fn
   "指定 JavaFX UI インスタンスのプロパティ情報を取得する。
    プロパティ名をキーとしたマップを返す。

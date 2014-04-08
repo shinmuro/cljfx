@@ -1,6 +1,6 @@
 (ns
   cljfx.examples.draggable
-  (:use [cljfx core property event listener seek coerce])
+  (:use cljfx.core)
 
   (:import javafx.beans.binding.Bindings))
 
@@ -31,11 +31,11 @@
         anchor-y (atom 0.0)
         trans-x  (atom 0.0)
         trans-y  (atom 0.0)]
-    (add-filter! node :on-mouse (fn [_ e]
+    (add-filter! node :mouse (fn [_ e]
                                   (when (.get drag-mode) (.consume e))))
 
     (add-filter! node
-                 :on-mouse-pressed
+                 :mouse-pressed
                  (fn [_ e]
                   (when (.get drag-mode)
                     (reset! anchor-x (.getX e))
@@ -44,7 +44,7 @@
                     (reset! trans-y  (v node :translate-y)))))
 
     (add-filter! node
-                 :on-mouse-dragged
+                 :mouse-dragged
                  (fn [_ e]
                    (when (.get drag-mode)
                      (v! node :translate-x (+ @trans-x (.getX e) (- @anchor-x)))

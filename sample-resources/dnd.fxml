@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children><AnchorPane prefHeight="100.0" prefWidth="307.0">
+<children><Text id="source" layoutX="24.0" layoutY="-68.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DRAG ME" x="50.0" y="100.0" /><Text id="target" layoutX="-182.0" layoutY="-24.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DROP HERE" x="250.0" y="100.0" />
+</children></AnchorPane>
+</children></HBox>

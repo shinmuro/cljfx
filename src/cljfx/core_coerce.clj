@@ -1,11 +1,10 @@
-(ns cljfx.coerce
-   "FXCollection や Property 生成関数。"
+(in-ns 'cljfx.core)
 
-   (import javafx.collections.FXCollections
-           javafx.beans.Observable
-           [javafx.beans.property
-            SimpleBooleanProperty SimpleIntegerProperty SimpleDoubleProperty SimpleStringProperty
-            SimpleListProperty SimpleMapProperty SimpleSetProperty]))
+(import javafx.collections.FXCollections
+        javafx.beans.Observable
+        '[javafx.beans.property
+          SimpleBooleanProperty SimpleIntegerProperty SimpleDoubleProperty SimpleStringProperty
+          SimpleListProperty SimpleMapProperty SimpleSetProperty])
 
 (defprotocol IObservableCollectionFactory
   "JavaFX Observable Collection 生成。
@@ -39,6 +38,11 @@
     (FXCollections/unmodifiableObservableMap (as-observable! coll)))
 
   clojure.lang.PersistentArrayMap
+  (as-observable! [coll] (FXCollections/observableMap coll))
+  (as-observable  [coll]
+    (FXCollections/unmodifiableObservableMap (as-observable! coll)))
+
+  java.util.Map
   (as-observable! [coll] (FXCollections/observableMap coll))
   (as-observable  [coll]
     (FXCollections/unmodifiableObservableMap (as-observable! coll)))
@@ -84,6 +88,9 @@
   (as-prop [x] (SimpleMapProperty. (as-observable! x)))
 
   clojure.lang.PersistentArrayMap
+  (as-prop [x] (SimpleMapProperty. (as-observable! x)))
+
+  java.util.Map
   (as-prop [x] (SimpleMapProperty. (as-observable! x)))
 
   clojure.lang.PersistentHashSet
