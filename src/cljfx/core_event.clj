@@ -44,6 +44,9 @@
 (defmethod listener :invalidated [listener-type f]
   (listener* InvalidationListener invalidated f ovservable))
 
+(defmethod listener :changed [listener-type f]
+  (listener* ChangeListener changed f ovservable old-value new-value))
+
 (defmacro listened
   "EventHandler 簡易生成マクロ。
 

@@ -38,11 +38,15 @@
 (defn- clj-invoke
   [target meth & args]
   (try (clojure.lang.Reflector/invokeInstanceMethod target meth (to-array args))
-       (catch Exception e
-         (throw (IllegalArgumentException. (str "No matching method: " meth " on " (class target)))))))
+       (catch Exception e (.getMessage e))))
+;         (throw (IllegalArgumentException. (str "No matching method: " meth " on "
+;                                                (class target))))
+;         (clojure.repl/pst))))
 
 (defn- upper-case-1st [s]
-  (apply str (cons (Character/toUpperCase (first s)) (rest s))))
+  (if s
+    (apply str (cons (Character/toUpperCase (first s)) (rest s)))
+    str))
 
 (defn- getter-str
   [target prop]
