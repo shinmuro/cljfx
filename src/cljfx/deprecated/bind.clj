@@ -1,11 +1,10 @@
-(ns 'cljfx.core.deprecated.bind)
+(ns cljfx.deprecated.bind)
 
 ; 恐らくどこにも使われなくなるが一応しばらく残しておく。
 (import javafx.beans.binding.ObjectBinding
         javafx.beans.binding.MapBinding)
 
-(defmacro ^{:deprecated true
-            :doc
+(defmacro bind-let
   "DEPRECATED.
 
    多分近い用法でちゃんと Bind を生成する make-bindings を発展させていけば事足りる。
@@ -20,8 +19,9 @@
    body には bind されたものを計算する式を入れる。
    マクロの結果は Binding オブジェクトを返す。
 
-   また、binding の先頭で指定した Property の値についても以後ここの計算結果が返ってくるようになる。"}
-  bind-let
+   また、binding の先頭で指定した Property の値についても
+   以後ここの計算結果が返ってくるようになる。"
+  {:no-doc true}
   [bindings & body]
   (cond
    (zero? (count bindings))

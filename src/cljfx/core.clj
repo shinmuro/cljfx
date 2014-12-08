@@ -50,10 +50,6 @@
     (->> (.lookupAll node fmt)
          (remove skin?))))
 
-#_(defn load-fxml
-  [name]
-  (FXMLLoader/load (io/resource name)))
-
 (defn load-fxml
   [name]
   (FXMLLoader/load (io/resource name)))

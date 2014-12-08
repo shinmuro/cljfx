@@ -4,7 +4,7 @@
         javafx.beans.Observable
         '[javafx.beans.property
           SimpleBooleanProperty SimpleIntegerProperty SimpleDoubleProperty SimpleStringProperty
-          SimpleListProperty SimpleMapProperty SimpleSetProperty])
+          SimpleListProperty SimpleMapProperty SimpleSetProperty SimpleObjectProperty])
 
 (defprotocol IObservableCollectionFactory
   "JavaFX Observable Collection 生成。
@@ -94,8 +94,15 @@
   (as-prop [x] (SimpleMapProperty. (as-observable! x)))
 
   clojure.lang.PersistentHashSet
-  (as-prop [x] (SimpleSetProperty. (as-observable! x))))
+  (as-prop [x] (SimpleSetProperty. (as-observable! x)))
 
-; API 見ると使ってるのあるのはあるが実際に使うまではペンディング
-;  javafx.beans.Observable
-;  (as-prop [x] (SimpleObjectProperty x)))
+  java.lang.Object
+  (as-prop [x] (SimpleObjectProperty. x))
+
+  nil
+  (as-prop [x] (SimpleObjectProperty. x)))
+
+(defmacro defprop
+  "(def name (as-prop val)) の短縮形。"
+  [name val]
+  `(def ~name (as-prop ~val)))
