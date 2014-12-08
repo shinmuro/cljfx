@@ -1,5 +1,5 @@
 (defproject cljfx "0.1.19"
-  :description "JavaFX Clojure ラッパー"
+  :description "JavaFX Clojure ラッパ"
   :url "https://github.com/shinmuro/cljfx"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
